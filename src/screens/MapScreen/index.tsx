@@ -1,22 +1,48 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import React, { useRef } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { colors } from '@src/theme/colors';
+import MyLocationIcon from '@src/assets/svgs/MyLocationIcon';
 
 const MapScreen = () => {
+  const mapViewRef = useRef<MapView>(null);
+  const defaultLocation = {
+    latitude: 24.8756,
+    longitude: 67.0396,
+  };
+
+  const recenterMap = () => {
+    if (mapViewRef.current) {
+      mapViewRef.current.animateToRegion({
+        ...defaultLocation,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      }, 1000);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <MapView
+        ref={mapViewRef}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={{
-          latitude: 30.3753,
-          longitude: 69.3451,
-          latitudeDelta: 15,
-          longitudeDelta: 15,
+          ...defaultLocation,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
         }}
         customMapStyle={mapStyle}
-      />
+      >
+        <Marker
+          coordinate={defaultLocation}
+          title={"Default Location"}
+          pinColor={colors.primary}
+        />
+      </MapView>
+      <TouchableOpacity style={styles.recenterButton} onPress={recenterMap}>
+        <MyLocationIcon size={24} fillColor={colors.white} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -30,6 +56,19 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+  recenterButton: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    backgroundColor: colors.primary,
+    borderRadius: 50,
+    padding: 15,
+    elevation: 5,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  }
 });
 
 const mapStyle = [
@@ -37,7 +76,7 @@ const mapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "color": 'red'
+        "color": colors.background
       }
     ]
   },
