@@ -7,11 +7,12 @@ import { colors } from '@src/theme/colors';
 interface PredictionItemProps {
   item: PredictionType;
   onPress: (placeId: string, description: string) => void;
+  isLast: boolean;
 }
 
-const PredictionItem: React.FC<PredictionItemProps> = ({ item, onPress }) => (
+const PredictionItem: React.FC<PredictionItemProps> = ({ item, onPress, isLast }) => (
   <TouchableOpacity
-    style={styles.predictionItem}
+    style={[styles.predictionItem, isLast && styles.lastItem]}
     onPress={() => onPress(item.place_id, item.description)}
   >
     <LocationPinIcon size={30} fillColor={colors.primary} />
@@ -32,6 +33,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderBottomWidth: 1,
     borderBottomColor: colors.grey,
+  },
+  lastItem: {
+    borderBottomWidth: 0,
   },
   predictionTextContainer: {
     marginLeft: 10,

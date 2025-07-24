@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, Keyboard, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
+import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, Keyboard, TouchableWithoutFeedback, ActivityIndicator, Dimensions } from 'react-native';
 import PredictionItem from '@src/components/PredictionItem';
 import { PredictionType, PlaceDetailsType } from '@src/types';
 import useDebounce from '@src/utils/useDebounce';
@@ -8,6 +8,9 @@ import CrossIcon from '@src/assets/svgs/CrossIcon';
 import { fetchPlaces, fetchPlaceDetails } from '@src/services/maps';
 import { SearchHistoryContext } from '@src/context/SearchHistoryContext';
 import HistoryItem from '@src/components/HistoryItem';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const LIST_MAX_HEIGHT = SCREEN_HEIGHT * 0.4;
 
 interface SearchBarProps {
     onLocationSelect: (details: PlaceDetailsType) => void;
@@ -27,6 +30,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const debouncedSearch = useDebounce(search, 800);
     const skipNextFetch = useRef(false);
     const searchInputRef = useRef<TextInput>(null);
+
+    console.log("predictions", predictions)
 
     useEffect(() => {
         if (skipNextFetch.current) {
@@ -50,25 +55,28 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
     const onSelectPlace = async (placeId: string, description: string) => {
         Keyboard.dismiss();
+
         const details = await fetchPlaceDetails(placeId);
-    
-        console.log("details---->", details)
         if (details) {
             onLocationSelect(details);
-            const prediction = predictions.find(p => p.place_id === placeId) || searchHistory.find(h => h.place_id === placeId);
-            if (prediction) {
-                addToHistory(prediction);
-            }
         }
-        const mainText = predictions.find(p => p.place_id === placeId)?.structured_formatting.main_text || description;
-        skipNextFetch.current = true;
-        setSearch(mainText);
-        const selectedPrediction = predictions.find(p => p.place_id === placeId);
-        if (selectedPrediction) {
-            setPredictions([selectedPrediction]);
+
+        const clickedItem =
+            predictions.find((p) => p.place_id === placeId) ||
+            searchHistory.find((h) => h.place_id === placeId);
+
+        if (clickedItem) {
+            addToHistory(clickedItem);
+            skipNextFetch.current = true;
+            setSearch(clickedItem.structured_formatting.main_text);
+            setPredictions([clickedItem]);
         } else {
+            // Fallback for safety
+            skipNextFetch.current = true;
+            setSearch(description);
             setPredictions([]);
         }
+
         setShowPredictions(false);
     };
 
@@ -107,13 +115,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
                         data={search.length > 0 ? predictions : searchHistory}
                         keyExtractor={(item) => item.place_id}
                         keyboardShouldPersistTaps="handled"
-                        renderItem={({ item }) => (
-                            search.length > 0 ? (
-                                <PredictionItem item={item} onPress={onSelectPlace} />
+                        renderItem={({ item, index }) => {
+                            const isLast = index === (search.length > 0 ? predictions.length - 1 : searchHistory.length - 1);
+                            return search.length > 0 ? (
+                                <PredictionItem item={item} onPress={onSelectPlace} isLast={isLast} />
                             ) : (
-                                <HistoryItem item={item} onPress={onSelectPlace} onRemove={removeFromHistory} />
-                            )
-                        )}
+                                <HistoryItem item={item} onPress={onSelectPlace} onRemove={removeFromHistory} isLast={isLast} />
+                            );
+                        }}
                         ListEmptyComponent={
                             search.length > 0 && !loading ? (
                                 <View style={styles.emptyComponent}>
@@ -162,6 +171,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginTop: 5,
         elevation: 3,
+        maxHeight: LIST_MAX_HEIGHT,
     },
     predictionItem: {
         flexDirection: 'row',

@@ -9,11 +9,12 @@ interface HistoryItemProps {
   item: PredictionType;
   onPress: (placeId: string, description: string) => void;
   onRemove: (placeId: string) => void;
+  isLast: boolean;
 }
 
-const HistoryItem: React.FC<HistoryItemProps> = ({ item, onPress, onRemove }) => (
+const HistoryItem: React.FC<HistoryItemProps> = ({ item, onPress, onRemove, isLast }) => (
   <TouchableOpacity
-    style={styles.historyItem}
+    style={[styles.historyItem, isLast && styles.lastItem]}
     onPress={() => onPress(item.place_id, item.description)}
   >
     <ClockIcon size={24} fillColor={colors.grey} />
@@ -38,6 +39,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderBottomWidth: 1,
     borderBottomColor: colors.grey,
+  },
+  lastItem: {
+    borderBottomWidth: 0,
   },
   textContainer: {
     flex: 1,

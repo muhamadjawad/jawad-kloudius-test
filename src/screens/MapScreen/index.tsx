@@ -45,7 +45,6 @@ const MapScreen = () => {
     }, 1000);
   };
 
-  console.log("selectedPlace", selectedPlace)
 
   return (
     <TouchableWithoutFeedback onPress={() => {
