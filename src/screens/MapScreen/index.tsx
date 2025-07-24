@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { colors } from '@src/theme/colors';
 import MyLocationIcon from '@src/assets/svgs/MyLocationIcon';
@@ -7,6 +7,7 @@ import SearchBar from '@src/components/SearchBar';
 
 const MapScreen = () => {
   const mapViewRef = useRef<MapView>(null);
+  const [showPredictions, setShowPredictions] = useState(false);
   const [markerLocation, setMarkerLocation] = useState({
     latitude: 24.8756,
     longitude: 67.0396,
@@ -30,35 +31,44 @@ const MapScreen = () => {
     setMarkerLocation(newLocation);
     mapViewRef.current?.animateToRegion({
       ...newLocation,
-      latitudeDelta: 0.05,
-      longitudeDelta: 0.05,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
     }, 1000);
   };
 
   return (
-    <View style={styles.container}>
-      <SearchBar onLocationSelect={handleLocationSelect} />
-      <MapView
-        ref={mapViewRef}
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        initialRegion={{
-          ...markerLocation,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        }}
-        customMapStyle={mapStyle}
-      >
-        <Marker
-          coordinate={markerLocation}
-          title={"Selected Location"}
-          pinColor={colors.primary}
+    <TouchableWithoutFeedback onPress={() => {
+      Keyboard.dismiss();
+      setShowPredictions(false);
+    }}>
+      <View style={styles.container}>
+        <SearchBar
+          onLocationSelect={handleLocationSelect}
+          showPredictions={showPredictions}
+          setShowPredictions={setShowPredictions}
         />
-      </MapView>
-      <TouchableOpacity style={styles.recenterButton} onPress={recenterMap}>
-        <MyLocationIcon size={24} fillColor={colors.white} />
-      </TouchableOpacity>
-    </View>
+        <MapView
+          ref={mapViewRef}
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          initialRegion={{
+            ...markerLocation,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+          }}
+          customMapStyle={mapStyle}
+        >
+          <Marker
+            coordinate={markerLocation}
+            title={"Selected Location"}
+            pinColor={colors.primary}
+          />
+        </MapView>
+        <TouchableOpacity style={styles.recenterButton} onPress={recenterMap}>
+          <MyLocationIcon size={24} fillColor={colors.white} />
+        </TouchableOpacity>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
