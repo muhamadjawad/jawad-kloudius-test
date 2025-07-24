@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.text,
     marginLeft: 5,
+    fontStyle: 'italic'
   },
   coordsContainer: {
     flexDirection: 'row',
@@ -84,9 +85,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   coordsText: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.text,
     marginLeft: 5,
+    fontWeight: 600
   },
 });
 
