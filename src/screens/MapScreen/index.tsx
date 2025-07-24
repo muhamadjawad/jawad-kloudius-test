@@ -6,7 +6,7 @@ import MyLocationIcon from '@src/assets/svgs/MyLocationIcon';
 import SearchBar from '@src/components/SearchBar';
 import BottomSheet, { BOTTOM_SHEET_MIN_HEIGHT } from '@src/components/BottomSheet';
 import { PlaceDetailsType } from '@src/types';
-import StarIcon from '@src/assets/svgs/StarIcon';
+import PlaceInfo from '@src/components/PlaceInfo';
 
 const MapScreen = () => {
   const mapViewRef = useRef<MapView>(null);
@@ -77,18 +77,7 @@ const MapScreen = () => {
         </MapView>
         {selectedPlace && !showPredictions && (
           <BottomSheet isMinimized={isSheetMinimized} setIsMinimized={setIsSheetMinimized}>
-            <Text style={styles.placeName} numberOfLines={1}>{selectedPlace.name}</Text>
-            {!isSheetMinimized && (
-              <>
-                <Text style={styles.placeAddress}>{selectedPlace.formatted_address}</Text>
-                {selectedPlace.rating && (
-                  <View style={styles.ratingContainer}>
-                    <Text style={styles.placeRating}>{selectedPlace.rating}</Text>
-                    <StarIcon size={16} fillColor={colors.secondary} />
-                  </View>
-                )}
-              </>
-            )}
+            <PlaceInfo selectedPlace={selectedPlace} isMinimized={isSheetMinimized} />
           </BottomSheet>
         )}
         <TouchableOpacity
@@ -125,31 +114,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-  },
-  placeContainer: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginBottom: 5,
-  },
-  placeName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.text,
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 5,
-  },
-  placeAddress: {
-    fontSize: 14,
-    color: colors.grey,
-    marginBottom: 5,
-  },
-  placeRating: {
-    fontSize: 14,
-    color: colors.text,
-    marginRight: 5,
   },
 });
 
