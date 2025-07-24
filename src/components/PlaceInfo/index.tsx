@@ -19,12 +19,14 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({ selectedPlace, isMinimized }) => 
     ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${GOOGLE_PLACES_API_KEY}`
     : null;
 
+  const imageSource = photoUrl ? { uri: photoUrl } : require('@src/assets/images/locationPlaceholder.webp');
+
   return (
     <>
-      {!isMinimized && photoUrl && (
+      {!isMinimized && (
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: photoUrl }}
+            source={imageSource}
             style={styles.placeImage}
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
