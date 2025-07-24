@@ -10,9 +10,9 @@ import PlaceInfo from '@src/components/PlaceInfo';
 
 const MapScreen = () => {
   const mapViewRef = useRef<MapView>(null);
-  const [showPredictions, setShowPredictions] = useState(false);
+  const [showPredictions, setShowPredictions] = useState<boolean>(false);
   const [selectedPlace, setSelectedPlace] = useState<PlaceDetailsType | null>(null);
-  const [isSheetMinimized, setIsSheetMinimized] = useState(false);
+  const [isSheetMinimized, setIsSheetMinimized] = useState<boolean>(false);
   const [markerLocation, setMarkerLocation] = useState({
     latitude: 24.8756,
     longitude: 67.0396,
