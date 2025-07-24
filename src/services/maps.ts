@@ -17,7 +17,7 @@ export const fetchPlaces = async (text: string): Promise<PredictionType[]> => {
 export const fetchPlaceDetails = async (placeId: string): Promise<PlaceDetailsType | null> => {
   try {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/place/details/json?key=${GOOGLE_PLACES_API_KEY}&place_id=${placeId}&fields=name,rating,formatted_address,geometry`
+      `https://maps.googleapis.com/maps/api/place/details/json?key=${GOOGLE_PLACES_API_KEY}&place_id=${placeId}&fields=name,rating,formatted_address,geometry,photos,formatted_phone_number`
     );
     const data = await response.json();
     return data.result;

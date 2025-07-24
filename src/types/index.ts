@@ -17,4 +17,6 @@ export interface PlaceDetailsType {
       lng: number;
     };
   };
+  photos?: { photo_reference: string }[];
+  formatted_phone_number?: string;
 }
