@@ -6,3 +6,15 @@ export interface PredictionType {
     secondary_text: string;
   };
 }
+
+export interface PlaceDetailsType {
+  name: string;
+  rating: number;
+  formatted_address: string;
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+}

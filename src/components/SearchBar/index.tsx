@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, Keyboard, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 import PredictionItem from '@src/components/PredictionItem';
-import { PredictionType } from '@src/types';
+import { PredictionType, PlaceDetailsType } from '@src/types';
 import useDebounce from '@src/utils/useDebounce';
 import { colors } from '@src/theme/colors';
 import CrossIcon from '@src/assets/svgs/CrossIcon';
 import { fetchPlaces, fetchPlaceDetails } from '@src/services/maps';
 
 interface SearchBarProps {
-    onLocationSelect: (location: { lat: number; lng: number }) => void;
+    onLocationSelect: (details: PlaceDetailsType) => void;
     showPredictions: boolean;
     setShowPredictions: (show: boolean) => void;
 }
@@ -47,9 +47,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
     const onSelectPlace = async (placeId: string, description: string) => {
         Keyboard.dismiss();
-        const location = await fetchPlaceDetails(placeId);
-        if (location) {
-            onLocationSelect(location);
+        const details = await fetchPlaceDetails(placeId);
+
+        console.log("details---->", details)
+        if (details) {
+            onLocationSelect(details);
         }
         const mainText = predictions.find(p => p.place_id === placeId)?.structured_formatting.main_text || description;
         skipNextFetch.current = true;

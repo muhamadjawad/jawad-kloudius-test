@@ -1,5 +1,5 @@
 import { GOOGLE_PLACES_API_KEY } from '@env';
-import { PredictionType } from '@src/types';
+import { PredictionType, PlaceDetailsType } from '@src/types';
 
 export const fetchPlaces = async (text: string): Promise<PredictionType[]> => {
   try {
@@ -14,13 +14,13 @@ export const fetchPlaces = async (text: string): Promise<PredictionType[]> => {
   }
 };
 
-export const fetchPlaceDetails = async (placeId: string): Promise<{ lat: number; lng: number } | null> => {
+export const fetchPlaceDetails = async (placeId: string): Promise<PlaceDetailsType | null> => {
   try {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/place/details/json?key=${GOOGLE_PLACES_API_KEY}&place_id=${placeId}`
+      `https://maps.googleapis.com/maps/api/place/details/json?key=${GOOGLE_PLACES_API_KEY}&place_id=${placeId}&fields=name,rating,formatted_address,geometry`
     );
     const data = await response.json();
-    return data.result.geometry.location;
+    return data.result;
   } catch (error) {
     console.error(error);
     return null;

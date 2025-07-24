@@ -4,10 +4,15 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { colors } from '@src/theme/colors';
 import MyLocationIcon from '@src/assets/svgs/MyLocationIcon';
 import SearchBar from '@src/components/SearchBar';
+import BottomSheet, { BOTTOM_SHEET_MIN_HEIGHT } from '@src/components/BottomSheet';
+import { PlaceDetailsType } from '@src/types';
+import StarIcon from '@src/assets/svgs/StarIcon';
 
 const MapScreen = () => {
   const mapViewRef = useRef<MapView>(null);
   const [showPredictions, setShowPredictions] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState<PlaceDetailsType | null>(null);
+  const [isSheetMinimized, setIsSheetMinimized] = useState(false);
   const [markerLocation, setMarkerLocation] = useState({
     latitude: 24.8756,
     longitude: 67.0396,
@@ -23,18 +28,24 @@ const MapScreen = () => {
     }
   };
 
-  const handleLocationSelect = (location: { lat: number, lng: number }) => {
+  const handleLocationSelect = (details: PlaceDetailsType) => {
+    const { lat, lng } = details.geometry.location;
     const newLocation = {
-      latitude: location.lat,
-      longitude: location.lng,
+      latitude: lat,
+      longitude: lng,
     };
     setMarkerLocation(newLocation);
+    setSelectedPlace(details);
+    setIsSheetMinimized(false);
+    setShowPredictions(false);
     mapViewRef.current?.animateToRegion({
       ...newLocation,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     }, 1000);
   };
+
+  console.log("selectedPlace", selectedPlace)
 
   return (
     <TouchableWithoutFeedback onPress={() => {
@@ -64,7 +75,29 @@ const MapScreen = () => {
             pinColor={colors.primary}
           />
         </MapView>
-        <TouchableOpacity style={styles.recenterButton} onPress={recenterMap}>
+        {selectedPlace && !showPredictions && (
+          <BottomSheet isMinimized={isSheetMinimized} setIsMinimized={setIsSheetMinimized}>
+            <Text style={styles.placeName} numberOfLines={1}>{selectedPlace.name}</Text>
+            {!isSheetMinimized && (
+              <>
+                <Text style={styles.placeAddress}>{selectedPlace.formatted_address}</Text>
+                {selectedPlace.rating && (
+                  <View style={styles.ratingContainer}>
+                    <Text style={styles.placeRating}>{selectedPlace.rating}</Text>
+                    <StarIcon size={16} fillColor={colors.secondary} />
+                  </View>
+                )}
+              </>
+            )}
+          </BottomSheet>
+        )}
+        <TouchableOpacity
+          style={[
+            styles.recenterButton,
+            { bottom: isSheetMinimized ? BOTTOM_SHEET_MIN_HEIGHT + 20 : 20 },
+          ]}
+          onPress={recenterMap}
+        >
           <MyLocationIcon size={24} fillColor={colors.white} />
         </TouchableOpacity>
       </View>
@@ -83,8 +116,7 @@ const styles = StyleSheet.create({
   },
   recenterButton: {
     position: 'absolute',
-    bottom: 30,
-    right: 30,
+    right: 20,
     backgroundColor: colors.primary,
     borderRadius: 50,
     padding: 15,
@@ -93,7 +125,32 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-  }
+  },
+  placeContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    marginBottom: 5,
+  },
+  placeName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  placeAddress: {
+    fontSize: 14,
+    color: colors.grey,
+    marginBottom: 5,
+  },
+  placeRating: {
+    fontSize: 14,
+    color: colors.text,
+    marginRight: 5,
+  },
 });
 
 const mapStyle = [
