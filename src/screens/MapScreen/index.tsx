@@ -79,15 +79,17 @@ const MapScreen = () => {
             <PlaceInfo selectedPlace={selectedPlace} isMinimized={isSheetMinimized} />
           </BottomSheet>
         )}
-        <TouchableOpacity
-          style={[
-            styles.recenterButton,
-            { bottom: isSheetMinimized ? BOTTOM_SHEET_MIN_HEIGHT + 20 : 20 },
-          ]}
-          onPress={recenterMap}
-        >
-          <MyLocationIcon size={24} fillColor={colors.white} />
-        </TouchableOpacity>
+        {(!selectedPlace || isSheetMinimized) && (
+          <TouchableOpacity
+            style={[
+              styles.recenterButton,
+              { bottom: selectedPlace && isSheetMinimized ? BOTTOM_SHEET_MIN_HEIGHT + 20 : 20 },
+            ]}
+            onPress={recenterMap}
+          >
+            <MyLocationIcon size={24} fillColor={colors.white} />
+          </TouchableOpacity>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
