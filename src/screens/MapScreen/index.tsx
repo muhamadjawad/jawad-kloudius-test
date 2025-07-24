@@ -28,21 +28,25 @@ const MapScreen = () => {
     }
   };
 
-  const handleLocationSelect = (details: PlaceDetailsType) => {
-    const { lat, lng } = details.geometry.location;
-    const newLocation = {
-      latitude: lat,
-      longitude: lng,
-    };
-    setMarkerLocation(newLocation);
-    setSelectedPlace(details);
-    setIsSheetMinimized(false);
-    setShowPredictions(false);
-    mapViewRef.current?.animateToRegion({
-      ...newLocation,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    }, 1000);
+  const handleLocationSelect = (details: PlaceDetailsType | null) => {
+    if (details) {
+      const { lat, lng } = details.geometry.location;
+      const newLocation = {
+        latitude: lat,
+        longitude: lng,
+      };
+      setMarkerLocation(newLocation);
+      setSelectedPlace(details);
+      setIsSheetMinimized(false);
+      setShowPredictions(false);
+      mapViewRef.current?.animateToRegion({
+        ...newLocation,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      }, 1000);
+    } else {
+      setSelectedPlace(null);
+    }
   };
 
 

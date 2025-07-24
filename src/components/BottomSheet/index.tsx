@@ -5,7 +5,7 @@ import ChevronDownIcon from '@src/assets/svgs/ChevronDownIcon';
 import ChevronUpIcon from '@src/assets/svgs/ChevronUpIcon';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-const BOTTOM_SHEET_MAX_HEIGHT = SCREEN_HEIGHT * 0.5;
+const BOTTOM_SHEET_MAX_HEIGHT = SCREEN_HEIGHT * 0.45;
 export const BOTTOM_SHEET_MIN_HEIGHT = SCREEN_HEIGHT * 0.1;
 
 interface BottomSheetProps {

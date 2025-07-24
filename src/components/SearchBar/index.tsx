@@ -8,12 +8,13 @@ import CrossIcon from '@src/assets/svgs/CrossIcon';
 import { fetchPlaces, fetchPlaceDetails } from '@src/services/maps';
 import { SearchHistoryContext } from '@src/context/SearchHistoryContext';
 import HistoryItem from '@src/components/HistoryItem';
+import useToast from '@src/hooks/useToast';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const LIST_MAX_HEIGHT = SCREEN_HEIGHT * 0.4;
 
 interface SearchBarProps {
-    onLocationSelect: (details: PlaceDetailsType) => void;
+    onLocationSelect: (details: PlaceDetailsType | null) => void;
     showPredictions: boolean;
     setShowPredictions: (show: boolean) => void;
 }
@@ -27,6 +28,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const [predictions, setPredictions] = useState<PredictionType[]>([]);
     const [loading, setLoading] = useState(false);
     const { searchHistory, addToHistory, removeFromHistory } = useContext(SearchHistoryContext)!;
+    const { showToast } = useToast();
     const debouncedSearch = useDebounce(search, 800);
     const skipNextFetch = useRef(false);
     const searchInputRef = useRef<TextInput>(null);
@@ -47,18 +49,28 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
     const handleFetchPlaces = async (text: string) => {
         setLoading(true);
-        const predictions = await fetchPlaces(text);
-        setPredictions(predictions);
-        setLoading(false);
-        setShowPredictions(true);
+        try {
+            const predictions = await fetchPlaces(text);
+            setPredictions(predictions);
+        } catch (error) {
+            showToast('Failed to fetch places. Please try again.');
+        } finally {
+            setLoading(false);
+            setShowPredictions(true);
+        }
     };
 
     const onSelectPlace = async (placeId: string, description: string) => {
         Keyboard.dismiss();
 
-        const details = await fetchPlaceDetails(placeId);
-        if (details) {
-            onLocationSelect(details);
+        try {
+            const details = await fetchPlaceDetails(placeId);
+            if (details) {
+                onLocationSelect(details);
+            }
+        } catch (error) {
+            showToast('Failed to fetch place details');
+            onLocationSelect(null);
         }
 
         const clickedItem =
