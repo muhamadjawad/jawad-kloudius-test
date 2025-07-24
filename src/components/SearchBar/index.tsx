@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, Keyboard, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 import PredictionItem from '@src/components/PredictionItem';
 import { PredictionType, PlaceDetailsType } from '@src/types';
@@ -6,6 +6,8 @@ import useDebounce from '@src/utils/useDebounce';
 import { colors } from '@src/theme/colors';
 import CrossIcon from '@src/assets/svgs/CrossIcon';
 import { fetchPlaces, fetchPlaceDetails } from '@src/services/maps';
+import { SearchHistoryContext } from '@src/context/SearchHistoryContext';
+import HistoryItem from '@src/components/HistoryItem';
 
 interface SearchBarProps {
     onLocationSelect: (details: PlaceDetailsType) => void;
@@ -21,6 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const [search, setSearch] = useState('');
     const [predictions, setPredictions] = useState<PredictionType[]>([]);
     const [loading, setLoading] = useState(false);
+    const { searchHistory, addToHistory, removeFromHistory } = useContext(SearchHistoryContext)!;
     const debouncedSearch = useDebounce(search, 800);
     const skipNextFetch = useRef(false);
     const searchInputRef = useRef<TextInput>(null);
@@ -48,10 +51,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const onSelectPlace = async (placeId: string, description: string) => {
         Keyboard.dismiss();
         const details = await fetchPlaceDetails(placeId);
-
+    
         console.log("details---->", details)
         if (details) {
             onLocationSelect(details);
+            const prediction = predictions.find(p => p.place_id === placeId) || searchHistory.find(h => h.place_id === placeId);
+            if (prediction) {
+                addToHistory(prediction);
+            }
         }
         const mainText = predictions.find(p => p.place_id === placeId)?.structured_formatting.main_text || description;
         skipNextFetch.current = true;
@@ -97,11 +104,15 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 {showPredictions && (
                     <FlatList
                         style={styles.list}
-                        data={predictions}
+                        data={search.length > 0 ? predictions : searchHistory}
                         keyExtractor={(item) => item.place_id}
                         keyboardShouldPersistTaps="handled"
                         renderItem={({ item }) => (
-                            <PredictionItem item={item} onPress={onSelectPlace} />
+                            search.length > 0 ? (
+                                <PredictionItem item={item} onPress={onSelectPlace} />
+                            ) : (
+                                <HistoryItem item={item} onPress={onSelectPlace} onRemove={removeFromHistory} />
+                            )
                         )}
                         ListEmptyComponent={
                             search.length > 0 && !loading ? (
