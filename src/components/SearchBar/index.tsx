@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { GOOGLE_PLACES_API_KEY } from '@env';
+import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, Keyboard, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
+import PredictionItem from '@src/components/PredictionItem';
 import { PredictionType } from '@src/types';
 import useDebounce from '@src/utils/useDebounce';
 import { colors } from '@src/theme/colors';
 import CrossIcon from '@src/assets/svgs/CrossIcon';
-import LocationPinIcon from '@src/assets/svgs/LocationPinIcon';
+import { fetchPlaces, fetchPlaceDetails } from '@src/services/maps';
 
 interface SearchBarProps {
     onLocationSelect: (location: { lat: number; lng: number }) => void;
@@ -20,60 +20,53 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
     const [search, setSearch] = useState('');
     const [predictions, setPredictions] = useState<PredictionType[]>([]);
+    const [loading, setLoading] = useState(false);
     const debouncedSearch = useDebounce(search, 800);
     const skipNextFetch = useRef(false);
+    const searchInputRef = useRef<TextInput>(null);
 
-
-    console.log("showPredictions", showPredictions)
     useEffect(() => {
         if (skipNextFetch.current) {
             skipNextFetch.current = false;
             return;
         }
         if (debouncedSearch) {
-            console.log("debouncedSearch--->", debouncedSearch)
-            fetchPlaces(debouncedSearch);
+            handleFetchPlaces(debouncedSearch);
         } else {
             setPredictions([]);
         }
     }, [debouncedSearch]);
 
-    const fetchPlaces = async (text: string) => {
-        try {
-            const response = await fetch(
-                `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${process.env.GOOGLE_PLACES_API_KEY}&input=${text}`
-            );
-            const data = await response.json();
-            console.log(data);
-            setPredictions(data.predictions);
-            setShowPredictions(true);
-        } catch (error) {
-            console.error(error);
-        }
+    const handleFetchPlaces = async (text: string) => {
+        setLoading(true);
+        const predictions = await fetchPlaces(text);
+        setPredictions(predictions);
+        setLoading(false);
+        setShowPredictions(true);
     };
 
     const onSelectPlace = async (placeId: string, description: string) => {
         Keyboard.dismiss();
-        try {
-            const selectedPrediction = predictions.find(p => p.place_id === placeId);
-
-            const response = await fetch(
-                `https://maps.googleapis.com/maps/api/place/details/json?key=${process.env.GOOGLE_PLACES_API_KEY}&place_id=${placeId}`
-            );
-            const data = await response.json();
-            const { lat, lng } = data.result.geometry.location;
-            onLocationSelect({ lat, lng });
-            skipNextFetch.current = true;
-            setSearch(description);
-            if (selectedPrediction) {
-                setPredictions([selectedPrediction]);
-            } else {
-                setPredictions([]);
-            }
-            setShowPredictions(false);
-        } catch (error) {
-            console.error(error);
+        const location = await fetchPlaceDetails(placeId);
+        if (location) {
+            onLocationSelect(location);
         }
+        const mainText = predictions.find(p => p.place_id === placeId)?.structured_formatting.main_text || description;
+        skipNextFetch.current = true;
+        setSearch(mainText);
+        const selectedPrediction = predictions.find(p => p.place_id === placeId);
+        if (selectedPrediction) {
+            setPredictions([selectedPrediction]);
+        } else {
+            setPredictions([]);
+        }
+        setShowPredictions(false);
+    };
+
+    const onClearSearch = () => {
+        setSearch('');
+        setPredictions([]);
+        searchInputRef.current?.focus();
     };
 
     return (
@@ -81,6 +74,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
                     <TextInput
+                        ref={searchInputRef}
                         style={styles.input}
                         placeholder="Search your location"
                         placeholderTextColor={colors.grey}
@@ -88,10 +82,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
                         onChangeText={setSearch}
                         onFocus={() => setShowPredictions(true)}
                     />
-                    {search.length > 0 && (
-                        <TouchableOpacity style={styles.crossIcon} onPress={() => setSearch('')}>
-                            <CrossIcon size={20} fillColor={colors.grey} />
-                        </TouchableOpacity>
+                    {loading ? (
+                        <ActivityIndicator style={styles.loader} size="small" color={colors.primary} />
+                    ) : (
+                        search.length > 0 && (
+                            <TouchableOpacity style={styles.crossIcon} onPress={onClearSearch}>
+                                <CrossIcon size={20} fillColor={colors.grey} />
+                            </TouchableOpacity>
+                        )
                     )}
                 </View>
                 {showPredictions && (
@@ -101,20 +99,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
                         keyExtractor={(item) => item.place_id}
                         keyboardShouldPersistTaps="handled"
                         renderItem={({ item }) => (
-                            <TouchableOpacity
-                                style={styles.predictionItem}
-                                onPress={() => onSelectPlace(item.place_id, item.description)}
-                            >
-                                <LocationPinIcon size={30} fillColor={colors.primary} />
-                                <View style={styles.predictionTextContainer}>
-                                    <Text style={styles.mainText}>{item.structured_formatting.main_text}</Text>
-                                    <Text style={styles.secondaryText}>{item.structured_formatting.secondary_text}</Text>
-                                </View>
-                            </TouchableOpacity>
+                            <PredictionItem item={item} onPress={onSelectPlace} />
                         )}
                         ListEmptyComponent={
-                            search.length > 0 ? (
-                                <Text style={styles.itemText}>No such place found</Text>
+                            search.length > 0 && !loading ? (
+                                <View style={styles.emptyComponent}>
+                                    <Text style={styles.emptyText}>No such place found</Text>
+                                </View>
                             ) : null
                         }
                     />
@@ -150,6 +141,9 @@ const styles = StyleSheet.create({
     crossIcon: {
         padding: 10,
     },
+    loader: {
+        padding: 10,
+    },
     list: {
         backgroundColor: colors.white,
         borderRadius: 5,
@@ -178,6 +172,15 @@ const styles = StyleSheet.create({
     },
     itemText: {
         padding: 10,
+    },
+    emptyComponent: {
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    emptyText: {
+        color: colors.grey,
+        fontSize: 16,
     },
 });
 
