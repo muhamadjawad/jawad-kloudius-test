@@ -1,3 +1,22 @@
+def envFile = rootProject.file('../.env')
+if (envFile.exists()) {
+    envFile.eachLine { line ->
+        line = line.trim()
+        if (line && !line.startsWith('#')) {
+            def parts = line.split('=', 2)
+            if (parts.size() == 2) {
+                def key = parts[0].trim()
+                def value = parts[1].trim()
+                // Remove quotes
+                if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+                    value = value.substring(1, value.length() - 1)
+                }
+                project.ext.set(key, value)
+            }
+        }
+    }
+}
+
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
@@ -83,7 +102,9 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.0" 
+        manifestPlaceholders = [GOOGLE_PLACES_API_KEY: project.findProperty("GOOGLE_PLACES_API_KEY") ?: ""]
+    
     }
     signingConfigs {
         debug {
