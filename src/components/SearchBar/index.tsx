@@ -3,6 +3,7 @@ import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, Touchabl
 import PredictionItem from '@src/components/PredictionItem';
 import { PlaceDetailsType } from '@src/types';
 import { colors } from '@src/theme/colors';
+import { fonts } from '@src/theme/fonts';
 import CrossIcon from '@src/assets/svgs/CrossIcon';
 import HistoryItem from '@src/components/HistoryItem';
 import { useSearch } from '@src/hooks/useSearch';
@@ -101,7 +102,8 @@ const styles = StyleSheet.create({
         padding: 13,
         borderRadius: 5,
         color: colors.black,
-        fontSize: 15
+        fontSize: 15,
+        fontFamily: fonts.regular,
     },
     crossIcon: {
         padding: 10,
@@ -147,6 +149,7 @@ const styles = StyleSheet.create({
     emptyText: {
         color: colors.grey,
         fontSize: 16,
+        fontFamily: fonts.regular,
     },
 });
 

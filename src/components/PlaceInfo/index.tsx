@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { PlaceDetailsType } from '@src/types';
 import { colors } from '@src/theme/colors';
+import { fonts } from '@src/theme/fonts';
 import StarIcon from '@src/assets/svgs/StarIcon';
 import GlobeIcon from '@src/assets/svgs/GlobeIcon';
 import PhoneIcon from '@src/assets/svgs/PhoneIcon';
@@ -89,9 +90,9 @@ const styles = StyleSheet.create({
   },
   placeName: {
     fontSize: 18,
-    fontWeight: 'bold',
     color: colors.text,
     marginBottom: 10,
+    fontFamily: fonts.bold,
   },
   detailsContainer: {
     flex: 1,
@@ -114,12 +115,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.grey,
     marginBottom: 5,
+    fontFamily: fonts.regular,
   },
   placeRating: {
     fontSize: 14,
     color: colors.text,
     marginLeft: 5,
-    fontStyle: 'italic'
+    fontFamily: fonts.italic,
   },
   coordsContainer: {
     flexDirection: 'row',
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.text,
     marginLeft: 5,
-    fontWeight: '600',
+    fontFamily: fonts.medium,
   },
   phoneContainer: {
     flexDirection: 'row',
@@ -144,6 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.text,
     marginLeft: 5,
+    fontFamily: fonts.regular,
   },
 });
 

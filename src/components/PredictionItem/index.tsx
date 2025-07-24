@@ -3,6 +3,7 @@ import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { PredictionType } from '@src/types';
 import LocationPinIcon from '@src/assets/svgs/LocationPinIcon';
 import { colors } from '@src/theme/colors';
+import { fonts } from '@src/theme/fonts';
 
 interface PredictionItemProps {
   item: PredictionType;
@@ -43,11 +44,12 @@ const styles = StyleSheet.create({
   mainText: {
     color: colors.text,
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
   },
   secondaryText: {
     color: colors.grey,
     fontSize: 13,
+    fontFamily: fonts.regular,
   },
 });
 

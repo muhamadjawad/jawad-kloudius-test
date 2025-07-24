@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { PredictionType } from '@src/types';
 import { colors } from '@src/theme/colors';
+import { fonts } from '@src/theme/fonts';
 import CrossIcon from '@src/assets/svgs/CrossIcon';
 import ClockIcon from '@src/assets/svgs/ClockIcon';
 
@@ -50,11 +51,12 @@ const styles = StyleSheet.create({
   mainText: {
     color: colors.text,
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
   },
   secondaryText: {
     color: colors.grey,
     fontSize: 13,
+    fontFamily: fonts.regular,
   },
 });
 
