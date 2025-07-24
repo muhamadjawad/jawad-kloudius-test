@@ -1,11 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import SplashScreen from 'react-native-splash-screen';
 import { colors } from '@src/theme/colors';
 import MyLocationIcon from '@src/assets/svgs/MyLocationIcon';
 import SearchBar from '@src/components/SearchBar';
 import BottomSheet, { BOTTOM_SHEET_MIN_HEIGHT } from '@src/components/BottomSheet';
-import { PlaceDetailsType } from '@src/types';
+import { PlaceDetailsType, CoordinatesType } from '@src/types';
 import PlaceInfo from '@src/components/PlaceInfo';
 
 const MapScreen = () => {
@@ -13,7 +14,7 @@ const MapScreen = () => {
   const [showPredictions, setShowPredictions] = useState<boolean>(false);
   const [selectedPlace, setSelectedPlace] = useState<PlaceDetailsType | null>(null);
   const [isSheetMinimized, setIsSheetMinimized] = useState<boolean>(false);
-  const [markerLocation, setMarkerLocation] = useState({
+  const [markerLocation, setMarkerLocation] = useState<CoordinatesType>({
     latitude: 24.8756,
     longitude: 67.0396,
   });

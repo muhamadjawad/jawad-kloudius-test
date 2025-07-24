@@ -20,3 +20,8 @@ export interface PlaceDetailsType {
   photos?: { photo_reference: string }[];
   formatted_phone_number?: string;
 }
+
+export interface CoordinatesType {
+  latitude: number;
+  longitude: number;
+}
