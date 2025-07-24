@@ -1,5 +1,5 @@
 import React from 'react';
-import MapScreen from './src/screens/MapScreen';
+import MapScreen from '@src/screens/MapScreen';
 
 function App(): React.JSX.Element {
   return <MapScreen />;

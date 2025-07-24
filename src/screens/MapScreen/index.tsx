@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { colors } from '../../theme/colors';
+import { colors } from '@src/theme/colors';
 
 const MapScreen = () => {
   return (
