@@ -1,42 +1,57 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { colors } from '@src/theme/colors';
 import MyLocationIcon from '@src/assets/svgs/MyLocationIcon';
+import SearchBar from '@src/components/SearchBar';
 
 const MapScreen = () => {
   const mapViewRef = useRef<MapView>(null);
-  const defaultLocation = {
+  const [markerLocation, setMarkerLocation] = useState({
     latitude: 24.8756,
     longitude: 67.0396,
-  };
+  });
 
   const recenterMap = () => {
     if (mapViewRef.current) {
       mapViewRef.current.animateToRegion({
-        ...defaultLocation,
+        ...markerLocation,
         latitudeDelta: 0.05,
         longitudeDelta: 0.05,
       }, 1000);
     }
   };
 
+  const handleLocationSelect = (location: { lat: number, lng: number }) => {
+    const newLocation = {
+      latitude: location.lat,
+      longitude: location.lng,
+    };
+    setMarkerLocation(newLocation);
+    mapViewRef.current?.animateToRegion({
+      ...newLocation,
+      latitudeDelta: 0.05,
+      longitudeDelta: 0.05,
+    }, 1000);
+  };
+
   return (
     <View style={styles.container}>
+      <SearchBar onLocationSelect={handleLocationSelect} />
       <MapView
         ref={mapViewRef}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={{
-          ...defaultLocation,
+          ...markerLocation,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
         }}
         customMapStyle={mapStyle}
       >
         <Marker
-          coordinate={defaultLocation}
-          title={"Default Location"}
+          coordinate={markerLocation}
+          title={"Selected Location"}
           pinColor={colors.primary}
         />
       </MapView>
