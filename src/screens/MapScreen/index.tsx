@@ -8,6 +8,8 @@ import SearchBar from '@src/components/SearchBar';
 import BottomSheet, { BOTTOM_SHEET_MIN_HEIGHT } from '@src/components/BottomSheet';
 import { PlaceDetailsType, CoordinatesType } from '@src/types';
 import PlaceInfo from '@src/components/PlaceInfo';
+import MarkerIndicator from '@src/components/MarkerIndicator';
+import { useMarkerIndicator } from '@src/hooks/useMarkerIndicator';
 
 const MapScreen = () => {
   const mapViewRef = useRef<MapView>(null);
@@ -18,6 +20,11 @@ const MapScreen = () => {
     latitude: 24.8756,
     longitude: 67.0396,
   });
+  const { rotation, isMarkerVisible, handleRegionChange } = useMarkerIndicator({ markerLocation });
+
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
 
   const recenterMap = () => {
     if (mapViewRef.current) {
@@ -50,7 +57,6 @@ const MapScreen = () => {
     }
   };
 
-
   return (
     <TouchableWithoutFeedback onPress={() => {
       Keyboard.dismiss();
@@ -72,6 +78,7 @@ const MapScreen = () => {
             longitudeDelta: 0.05,
           }}
           customMapStyle={mapStyle}
+          onRegionChangeComplete={handleRegionChange}
         >
           <Marker
             coordinate={markerLocation}
@@ -79,6 +86,7 @@ const MapScreen = () => {
             pinColor={colors.danger}
           />
         </MapView>
+        <MarkerIndicator rotation={rotation} visible={!isMarkerVisible} />
         {selectedPlace && !showPredictions && (
           <BottomSheet isMinimized={isSheetMinimized} setIsMinimized={setIsSheetMinimized}>
             <PlaceInfo selectedPlace={selectedPlace} isMinimized={isSheetMinimized} />
