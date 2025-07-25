@@ -55,7 +55,7 @@ const MapScreen = () => {
             pinColor={colors.danger}
           />
         </MapView>
-        <MarkerIndicator rotation={rotation} visible={!isMarkerVisible} />
+        <MarkerIndicator rotation={rotation} visible={!isMarkerVisible && !showPredictions && (!selectedPlace || isSheetMinimized)} />
         {selectedPlace && !showPredictions && (
           <BottomSheet isMinimized={isSheetMinimized} setIsMinimized={setIsSheetMinimized}>
             <PlaceInfo selectedPlace={selectedPlace} isMinimized={isSheetMinimized} />
