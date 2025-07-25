@@ -1,97 +1,78 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 📍 <font color="#2ECC71">LocateMe</font>: Your Ultimate Location Finder
 
-# Getting Started
+<p align="center">
+  <img src="src/assets/images/logo.png" alt="LocateMe Logo" width="150"/>
+</p>
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+<p align="center">
+  <strong>Find, save, and explore any location with ease!</strong>
+</p>
+<p align="center">
+LocateMe is a sleek React Native app that lets you search places on the map, view details, and keep a history of your searches — perfect for trip planning or exploring new spots.</p>
 
-## Step 1: Start Metro
+## ✨ Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- **🗺️ Interactive Map:** A beautiful and responsive map to explore the world.
+- **🔍 Powerful Search:** Find any location with real-time search predictions.
+- **ℹ️ Place Details:** Get rich information about any place, including address, coordinates, and photos.
+- **⭐ Ratings and Reviews:** See what others think with integrated place ratings.
+- **📍 Marker Indicator:** Displays a dynamic marker at the selected location, updates in real-time as you move the map, and highlights the exact coordinates..
+- **📜 Search History:** Keep track of your past searches for quick access.
+- **👆 Bottom Sheet:** A smooth, animated bottom sheet to display place information without cluttering the map.
+- **🔄 Recenter Button:** Easily get back to your selected location with a single tap.
+- **🎨 Custom Map Styles:** A visually appealing map style for a better user experience.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## 🚀 Getting Started
 
-```sh
-# Using npm
-npm start
+Follow these instructions to get the project up and running on your local machine.
 
-# OR using Yarn
-yarn start
-```
+### ✅ Prerequisites
 
-## Step 2: Build and run your app
+- **Node.js:** Make sure you have Node.js version `22.12.0` or higher installed.
+- **Yarn or npm:** This project uses either Yarn or npm for package management.
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### ⚙️ Installation
 
-### Android
+1.  **Clone the repository:**
+    ```sh
+    git clone https://github.com/your-username/locateme.git
+    cd locateme
+    ```
 
-```sh
-# Using npm
-npm run android
+2.  **Install dependencies:**
+    ```sh
+    # Using npm
+    npm install
 
-# OR using Yarn
-yarn android
-```
+    # OR using Yarn
+    yarn install
+    ```
 
-### iOS
+### 🔑 Google Cloud API Setup
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+To use the map and location services, you need to enable the **Maps SDK for Android** and the **Places API** in the Google Cloud Console.
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+1.  **Enable Maps SDK for Android:**
+    - Go to the [Google Cloud Console](https://console.cloud.google.com/).
+    - Navigate to **APIs & Services > Library**.
+    - Search for **Maps SDK for Android** and enable it.
+    <p align="center">
+      <img src="src/assets/ss/g-android.webp" alt="Maps SDK for Android" width="400"/>
+    </p>
 
-```sh
-bundle install
-```
+2.  **Enable Places API:**
+    - In the same library, search for **Places API** and enable it.
+    <p align="center">
+      <img src="src/assets/ss/g-places.webp" alt="Places API" width="400"/>
+    </p>
 
-Then, and every time you update your native dependencies, run:
+3.  **Get API Key:**
+    - After enabling the APIs, go to **APIs & Services > Credentials** and create a new API key.
+    - Copy the generated API key.
 
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+4.  **Create `.env` file:**
+    - In the root of the project, create a new file named `.env`.
+    - Add your API key to the `.env` file as follows:
+      ```
+      GOOGLE_PLACES_API_KEY=your_api_key_here
+      ```
