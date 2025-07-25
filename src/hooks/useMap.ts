@@ -2,7 +2,6 @@ import { useRef, useState, useEffect } from 'react';
 import MapView from 'react-native-maps';
 import SplashScreen from 'react-native-splash-screen';
 import { PlaceDetailsType, CoordinatesType } from '@src/types';
-import { useMarkerIndicator } from './useMarkerIndicator';
 
 export const useMap = () => {
   const mapViewRef = useRef<MapView>(null);

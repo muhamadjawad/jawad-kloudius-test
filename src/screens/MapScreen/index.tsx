@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { colors } from '@src/theme/colors';
 import MyLocationIcon from '@src/assets/svgs/MyLocationIcon';

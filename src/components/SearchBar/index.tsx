@@ -30,9 +30,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onLocationSelect, showPredictions
         searchInputRef,
     } = useSearch({ onLocationSelect, setShowPredictions });
 
-
-
-    console.log("predictions", predictions)
     return (
         <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
             <View style={styles.container}>
@@ -138,29 +135,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
         elevation: 3,
         maxHeight: LIST_MAX_HEIGHT,
-    },
-    predictionItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        marginHorizontal: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.grey,
-    },
-    predictionTextContainer: {
-        marginLeft: 10,
-    },
-    mainText: {
-        color: colors.text,
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    secondaryText: {
-        color: colors.grey,
-        fontSize: 13,
-    },
-    itemText: {
-        padding: 10,
     },
     emptyComponent: {
         padding: 20,
