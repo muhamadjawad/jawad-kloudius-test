@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
+    paddingHorizontal: 20,
     marginHorizontal: 10,
     borderBottomWidth: 1,
     borderBottomColor: colors.grey,
@@ -40,6 +41,7 @@ const styles = StyleSheet.create({
   },
   predictionTextContainer: {
     marginLeft: 10,
+    flex: 1,
   },
   mainText: {
     color: colors.text,
