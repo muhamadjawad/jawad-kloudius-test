@@ -36,6 +36,7 @@ LocateMe is a sleek React Native app that lets you search places on the map, vie
     <td align="center"><img src="src/assets/ss/6.webp" width="150"></td>
   </tr>
 </table>
+![locateme_gif](https://github.com/user-attachments/assets/a01f4e18-3992-4819-86f9-3bf5d7525a75)
 
 ## 🚀 Getting Started
 
