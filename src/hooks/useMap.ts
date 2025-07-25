@@ -13,11 +13,6 @@ export const useMap = () => {
     longitude: 67.0396,
   });
 
-
-  useEffect(() => {
-    SplashScreen.hide();
-  }, []);
-
   const recenterMap = () => {
     if (mapViewRef.current) {
       mapViewRef.current.animateToRegion(

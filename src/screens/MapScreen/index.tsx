@@ -1,14 +1,15 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { colors } from '@src/theme/colors';
-import MyLocationIcon from '@src/assets/svgs/MyLocationIcon';
-import SearchBar from '@src/components/SearchBar';
-import BottomSheet, { BOTTOM_SHEET_MIN_HEIGHT } from '@src/components/BottomSheet';
 import PlaceInfo from '@src/components/PlaceInfo';
 import MarkerIndicator from '@src/components/MarkerIndicator';
-import { useMap } from '@src/hooks/useMap';
+import SearchBar from '@src/components/SearchBar';
+
+import { colors } from '@src/theme/colors';
+import MyLocationIcon from '@src/assets/svgs/MyLocationIcon';
 import { useMarkerIndicator } from '@src/hooks/useMarkerIndicator';
+import { useMap } from '@src/hooks/useMap';
+import BottomSheet, { BOTTOM_SHEET_MIN_HEIGHT } from '@src/components/BottomSheet';
 
 const MapScreen = () => {
   const {
