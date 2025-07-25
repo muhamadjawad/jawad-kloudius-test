@@ -76,7 +76,7 @@ const MapScreen = () => {
           <Marker
             coordinate={markerLocation}
             title={"Selected Location"}
-            pinColor={colors.primary}
+            pinColor={colors.danger}
           />
         </MapView>
         {selectedPlace && !showPredictions && (

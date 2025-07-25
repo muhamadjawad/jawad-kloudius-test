@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, TouchableWithoutFeedback, ActivityIndicator, Dimensions } from 'react-native';
+import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, TouchableWithoutFeedback, ActivityIndicator, Dimensions, Pressable } from 'react-native';
 import PredictionItem from '@src/components/PredictionItem';
 import { PlaceDetailsType } from '@src/types';
 import { colors } from '@src/theme/colors';
@@ -30,19 +30,39 @@ const SearchBar: React.FC<SearchBarProps> = ({ onLocationSelect, showPredictions
         searchInputRef,
     } = useSearch({ onLocationSelect, setShowPredictions });
 
+
+
+    console.log("predictions", predictions)
     return (
         <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <TextInput
-                        ref={searchInputRef}
-                        style={styles.input}
-                        placeholder="Search your location"
-                        placeholderTextColor={colors.grey}
-                        value={search}
-                        onChangeText={setSearch}
-                        onFocus={() => setShowPredictions(true)}
-                    />
+                    {showPredictions ? (
+                        <TextInput
+                            ref={searchInputRef}
+                            style={styles.input}
+                            placeholder="Search your location"
+                            placeholderTextColor={colors.grey}
+                            value={search}
+                            onChangeText={setSearch}
+                            onFocus={() => setShowPredictions(true)}
+                            autoFocus
+                        />
+                    ) : (
+                        <Pressable style={{ width: '100%' }} onPress={() => setShowPredictions(true)}>
+                            <Text
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                                style={[styles.input, {
+                                    paddingTop: 15,
+                                    color: search.length > 0 ? colors.primary : colors.grey,
+                                }]}>
+                                {search || "Search your location"}
+                            </Text>
+                        </Pressable>
+                    )}
+
+
                     {loading ? (
                         <ActivityIndicator style={styles.loader} size="small" color={colors.primary} />
                     ) : (
@@ -104,6 +124,7 @@ const styles = StyleSheet.create({
         color: colors.black,
         fontSize: 15,
         fontFamily: fonts.regular,
+
     },
     crossIcon: {
         padding: 10,
