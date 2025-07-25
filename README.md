@@ -22,6 +22,21 @@ LocateMe is a sleek React Native app that lets you search places on the map, vie
 - **🔄 Recenter Button:** Easily get back to your selected location with a single tap.
 - **🎨 Custom Map Styles:** A visually appealing map style for a better user experience.
 
+## 📸 App Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="src/assets/ss/1.webp" width="150"></td>
+    <td align="center"><img src="src/assets/ss/2.webp" width="150"></td>
+    <td align="center"><img src="src/assets/ss/3.webp" width="150"></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="src/assets/ss/4.webp" width="150"></td>
+    <td align="center"><img src="src/assets/ss/5.webp" width="150"></td>
+    <td align="center"><img src="src/assets/ss/6.webp" width="150"></td>
+  </tr>
+</table>
+
 ## 🚀 Getting Started
 
 Follow these instructions to get the project up and running on your local machine.
