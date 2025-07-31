@@ -7,7 +7,7 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     if (__DEV__) {
-      SplashScreen.hide();
+      SplashScreen.hide();//
     } else {
       setTimeout(() => {
         SplashScreen.hide();
